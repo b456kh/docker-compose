@@ -1,0 +1,22 @@
+version: "3.4"
+services:
+  logrotate:
+    image: blacklabelops/logrotate
+    deploy:
+      mode: global
+    volumes:
+      - "/var/lib/docker/containers:/var/lib/docker/containers"
+    environment:
+      - LOGS_DIRECTORIES='/var/lib/docker/containers'
+      - LOGROTATE_COPIES=10
+      - LOGROTATE_INTERVAL=daily
+      - LOGROTATE_DATEFORMAT='-%Y%m%d%H%M%S'
+      - TZ='Asia/Shanghai'
+      - LOGROTATE_COMPRESSION=compress
+    networks:
+      - chunwei
+networks:
+  chunwei:
+    external: true
+    driver: overlay
+    attachable: true

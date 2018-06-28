@@ -1,0 +1,34 @@
+version: "3.4"
+services:
+  jenkins:
+    image: jenkins
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1G
+      restart_policy:
+        condition: on-failure
+    ports:
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - type: volume
+        source: jenkins_home
+        target: /var/jenkins_home/
+        volume:
+          nocopy: true
+    networks:
+      - chunwei
+
+volumes:
+  jenkins_home:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: addr=nfs地址,vers=4,soft,timeo=180,bg,tcp,rw
+      device: nfs地址:/docker/volumes/jenkins_home/
+
+networks:
+  chunwei:
